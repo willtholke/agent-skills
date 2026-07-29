@@ -1,0 +1,55 @@
+{
+  "gradients": [
+    {
+      "id": "aurora-rose",
+      "title": "Aurora rose",
+      "file": "aurora-rose.png"
+    },
+    {
+      "id": "sunset-flare",
+      "title": "Sunset flare",
+      "file": "sunset-flare.png"
+    },
+    {
+      "id": "midnight-orchid",
+      "title": "Midnight orchid",
+      "file": "midnight-orchid.png"
+    },
+    {
+      "id": "arctic-mint",
+      "title": "Arctic mint",
+      "file": "arctic-mint.png"
+    },
+    {
+      "id": "citrus-sky",
+      "title": "Citrus sky",
+      "file": "citrus-sky.png"
+    },
+    {
+      "id": "peach-bloom",
+      "title": "Peach bloom",
+      "file": "peach-bloom.png"
+    },
+    {
+      "id": "ember-violet",
+      "title": "Ember violet",
+      "file": "ember-violet.png"
+    },
+    {
+      "id": "lagoon",
+      "title": "Lagoon",
+      "file": "lagoon.png"
+    },
+    {
+      "id": "dusk-haze",
+      "title": "Dusk haze",
+      "file": "dusk-haze.png"
+    },
+    {
+      "id": "neon-prism",
+      "title": "Neon prism",
+      "file": "neon-prism.png"
+    }
+  ],
+  "default": "aurora-rose"
+}

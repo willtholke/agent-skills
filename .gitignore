@@ -1,0 +1,6 @@
+.DS_Store
+**/assets/gradients/_candidates/
+**/assets/gradients/_candidates_mesh/
+__pycache__/
+*.pyc
+.venv/
