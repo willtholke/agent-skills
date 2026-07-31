@@ -23,7 +23,9 @@ approves in chat.
 - Never put a lone Before image on the PR – always side-by-side Before | After
 - Never embed raw (unframed) window shots on the PR – use gradient-framed PNGs
 - Never draw "Before" / "After" text on the gradient – table headers are enough
-- Never ship before/after framed PNGs at different pixel sizes
+- Never force before/after framed PNGs to the same pixel dimensions (hug each shot)
+- Never letterbox into a giant fixed canvas (e.g. 1920×1200) by default – that
+  creates uneven empty gradient fields
 - Never screenshot the whole desktop when a window capture will do
 - Never commit framed PNGs into a product repo unless the user asks
 - Never destroy or reimplement `github-pr-images` – read and follow that skill
@@ -38,8 +40,7 @@ Mesh gradients live in `assets/gradients/` (see `manifest.json`):
 `peach-bloom`, `ember-violet`, `lagoon`, `dusk-haze`, `neon-prism`
 
 Default: `aurora-rose`. Pick another if the UI is light (try `arctic-mint` /
-`peach-bloom` / `dusk-haze`) or the user names one. Framed outputs must clearly
-sit on the chosen mesh (compose.py centers the window on the full gradient).
+`peach-bloom` / `dusk-haze`) or the user names one.
 
 ## Scripts (this skill folder)
 
@@ -52,20 +53,17 @@ python3 "$SKILL/scripts/capture_window.py" --list
 # capture one window (title substring)
 python3 "$SKILL/scripts/capture_window.py" --title "Harness Bay" --out /tmp/ui-before.png
 
-# pair compose (preferred): same canvas + shared letterboxed window slot
+# pair compose (default): hug each shot – equal tight margin, soft shadow
 python3 "$SKILL/scripts/compose.py" \
   --shots /tmp/ui-before.png /tmp/ui-after.png \
   --outdir /tmp/ui-change-before-after/slug \
-  --gradient aurora-rose \
-  --width 1920 --height 1200 \
-  --margin 0.035
+  --gradient aurora-rose
 
-# single shot (same defaults: no in-image label, tight margin, soft shadow)
+# single shot
 python3 "$SKILL/scripts/compose.py" \
   --shot /tmp/ui-before.png \
   --out /tmp/ui-before-framed.png \
   --gradient aurora-rose \
-  --width 1920 --height 1200 \
   --highlight 120,80,480,220
 
 # optional crop when raws differ (e.g. wide desktop vs inbox column)
@@ -89,15 +87,17 @@ Requires macOS (`screencapture`) and Pillow (`pip install pillow` if missing).
 | Knob | Default | Intent |
 | --- | --- | --- |
 | In-image label | off | Markdown `Before` / `After` table headers only |
-| `--margin` | `0.035` (~3.5%) | UI window dominates; not 8%+ with label space |
+| Framing | **hug content** | `canvas = shot + 2×margin` – no giant empty gradient |
+| `--margin` | `0.03` (~3% of min side, ≥36px) | Equal tight pad on all four sides of the shot |
 | Shadow | large blur, low opacity, small offset | Soft lift, not a hard dark edge |
-| Canvas | gradient native, or `--width`/`--height` | Both framed outputs identical W×H |
-| Pair `--shots` | shared slot + letterbox | Same window chrome even if raw aspects differ |
+| Corner radius | ~2% of min(shot side) | Same treatment on before and after |
+| Output size | **may differ** before vs after | Same border treatment matters, not matching W×H |
+| `--width` / `--height` / `--slot` | omit | Opt-in legacy fixed canvas / letterbox only |
 
-When raws are landscape vs portrait of the same UI, crop to a comparable region
-(inbox column, etc.) with `--crop` / `--crops`, or rely on pair letterboxing
-inside the shared slot. Verify with Pillow/`identify` that both framed PNGs
-have the same pixel size before upload.
+**Optimize for:** identical border treatment (equal margin, shadow, radius), not
+identical canvas dimensions. Crop raws toward comparable UI chrome when aspects
+diverge (`--crop` / `--crops`). Do **not** pass `--width 1920 --height 1200`
+unless the user explicitly wants a fixed poster canvas.
 
 ## Output layout
 
@@ -122,11 +122,12 @@ Do this before any PR edit.
 2. **Change** — make the UI edit (or confirm it is already made).
 3. **After** — capture again with the same `--title`.
 4. **Compose** — run `compose.py --shots … --outdir …` with the same
-   `--gradient`, `--width`/`--height`, and `--margin`. Add `--highlight` /
-   `--highlights` around the changed region when useful. **Do not** pass
-   `--label` / `--labels` for PR frames. Crop raws toward the same UI chrome
-   when aspects diverge. Both outputs must be gradient-framed at the **same
-   pixel dimensions**.
+   `--gradient` and `--margin`. **Omit** `--width` / `--height` / `--slot` so
+   each frame hugs its shot. Add `--highlight` / `--highlights` around the
+   changed region when useful. **Do not** pass `--label` / `--labels` for PR
+   frames. Crop raws toward the same UI chrome when aspects diverge. Framed
+   outputs may differ in pixel size; both must use the same tight equal margin
+   and soft shadow.
 5. **Show** — `Read` both framed PNGs so they appear in the agent chat. The user
    must see them. Optionally also show `side_by_side.py --no-labels` output.
 6. **Describe** — under the images, add a succinct change description: **one
