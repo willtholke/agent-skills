@@ -22,7 +22,7 @@ npx skills add willtholke/agent-skills
 ```bash
 git clone https://github.com/willtholke/agent-skills.git
 mkdir -p ~/.cursor/skills
-ln -s "$(pwd)/agent-skills/skills/github-pr-images" ~/.cursor/skills/github-pr-images
+ln -s "$(pwd)/agent-skills/skills/"* ~/.cursor/skills/
 ```
 
 ## Skills
@@ -30,6 +30,7 @@ ln -s "$(pwd)/agent-skills/skills/github-pr-images" ~/.cursor/skills/github-pr-i
 | Skill | When to use |
 | --- | --- |
 | [github-pr-images](skills/github-pr-images/) | Screenshots or diagrams in GitHub PR / issue bodies |
+| [ship](skills/ship/) | Explicit `/ship`: branch → PR → green + preview → merge → prod smoke test |
 
 ## What belongs here
 
