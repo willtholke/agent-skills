@@ -18,6 +18,7 @@ approves in chat.
 
 - Never touch a PR body (or upload for a PR) before Phase A approval
 - Never skip showing both framed images in chat via the Read tool
+- Never skip the succinct change bullet(s) under the images in chat or the PR
 - Never skip the approval question after showing both images
 - Never put a lone Before image on the PR – always side-by-side Before | After
 - Never embed raw (unframed) window shots on the PR – use gradient-framed PNGs
@@ -128,11 +129,24 @@ Do this before any PR edit.
    pixel dimensions**.
 5. **Show** — `Read` both framed PNGs so they appear in the agent chat. The user
    must see them. Optionally also show `side_by_side.py --no-labels` output.
-6. **Hard stop** — ask:
+6. **Describe** — under the images, add a succinct change description: **one
+   bullet, maybe two max**. Not an essay. Example:
+
+   ```markdown
+   ## Before / After
+
+   | Before | After |
+   | --- | --- |
+   | ![Before](…) | ![After](…) |
+
+   - Center empty-state subtitle and vertically center the empty block in the inbox list
+   ```
+
+7. **Hard stop** — ask:
 
    > Approve this UI change? (`yes` / describe a tweak / `no`)
 
-7. **Do not** upload images, run `gh pr edit`, or otherwise touch GitHub until
+8. **Do not** upload images, run `gh pr edit`, or otherwise touch GitHub until
    the user answers `yes` (or an equivalent clear approval). On tweak: redo
    capture/compose/show and ask again. On `no`: stop.
 
@@ -151,7 +165,9 @@ Only when the user said **yes** (or clear equivalent) and wants these on a PR:
    available, else Litterbox / similar public hosts that work on private repos).
    Never private `raw.githubusercontent.com` embeds.
 2. **Edit the PR body** to include a side-by-side section. Prefer a markdown
-   table (renders on GitHub) — labels live in the headers, not on the PNGs:
+   table (renders on GitHub) — labels live in the headers, not on the PNGs.
+   Under the table, include the same succinct change description as Phase A
+   (**one bullet, maybe two max**):
 
    ```markdown
    ## Before / After
@@ -159,11 +175,14 @@ Only when the user said **yes** (or clear equivalent) and wants these on a PR:
    | Before | After |
    | --- | --- |
    | ![Before](URL_BEFORE) | ![After](URL_AFTER) |
+
+   - Center empty-state subtitle and vertically center the empty block in the inbox list
    ```
 
    Both URLs must point at the **gradient-framed** versions, not raw window
    shots. A single wide `side_by_side.py` image is optional; the table is enough
-   when both URLs work.
+   when both URLs work. For multiple visual changes on one PR, use one section
+   per change (heading + table + bullets each).
 3. **Replace** any old single-before-only section (`## Before` with one image,
    no After). Do not leave a lone Before as the visual summary.
 4. Use `gh pr edit <n> --body "$(cat <<'EOF' … EOF)"` (or equivalent) with the
