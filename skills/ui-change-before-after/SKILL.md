@@ -26,6 +26,8 @@ approves in chat.
 - Never force before/after framed PNGs to the same pixel dimensions (hug each shot)
 - Never letterbox into a giant fixed canvas (e.g. 1920×1200) by default – that
   creates uneven empty gradient fields
+- Never use one gradient for every Before/After pair on a multi-change PR –
+  each change gets its own id; Before and After in a pair must match
 - Never screenshot the whole desktop when a window capture will do
 - Never commit framed PNGs into a product repo unless the user asks
 - Never destroy or reimplement `github-pr-images` – read and follow that skill
@@ -39,8 +41,23 @@ Mesh gradients live in `assets/gradients/` (see `manifest.json`):
 `aurora-rose`, `sunset-flare`, `midnight-orchid`, `arctic-mint`, `citrus-sky`,
 `peach-bloom`, `ember-violet`, `lagoon`, `dusk-haze`, `neon-prism`
 
-Default: `aurora-rose`. Pick another if the UI is light (try `arctic-mint` /
-`peach-bloom` / `dusk-haze`) or the user names one.
+Default for a **single** change: `aurora-rose`. Pick another if the UI is light
+(try `arctic-mint` / `peach-bloom` / `dusk-haze`) or the user names one.
+
+### Multiple changes on one PR (do not re-break)
+
+When composing **more than one** Before/After section for the same PR:
+
+- Pick a gradient **per change** from `assets/gradients/manifest.json`.
+- Before and After for that change **must share the same `--gradient` id**.
+- Different changes on the same PR must use **different** gradient ids. Rotate
+  through the pack (e.g. `aurora-rose`, `sunset-flare`, `midnight-orchid`,
+  `arctic-mint`, `citrus-sky`, `peach-bloom`, `ember-violet`, `lagoon`,
+  `dusk-haze`, `neon-prism`). Prefer darker packs (`midnight-orchid`,
+  `ember-violet`, `lagoon`) when the UI chrome is dark and light packs
+  (`citrus-sky`, `peach-bloom`, `arctic-mint`) when it is light–or follow an
+  explicit assignment from the user.
+- **Do not** use one gradient for the whole PR.
 
 ## Scripts (this skill folder)
 
@@ -122,12 +139,14 @@ Do this before any PR edit.
 2. **Change** — make the UI edit (or confirm it is already made).
 3. **After** — capture again with the same `--title`.
 4. **Compose** — run `compose.py --shots … --outdir …` with the same
-   `--gradient` and `--margin`. **Omit** `--width` / `--height` / `--slot` so
-   each frame hugs its shot. Add `--highlight` / `--highlights` around the
-   changed region when useful. **Do not** pass `--label` / `--labels` for PR
-   frames. Crop raws toward the same UI chrome when aspects diverge. Framed
-   outputs may differ in pixel size; both must use the same tight equal margin
-   and soft shadow.
+   `--gradient` and `--margin` for that change's Before and After. When the PR
+   has multiple visual sections, choose a **different** `--gradient` id per
+   section (see Multiple changes above). **Omit** `--width` / `--height` /
+   `--slot` so each frame hugs its shot. Add `--highlight` / `--highlights`
+   around the changed region when useful. **Do not** pass `--label` /
+   `--labels` for PR frames. Crop raws toward the same UI chrome when aspects
+   diverge. Framed outputs may differ in pixel size; both must use the same
+   tight equal margin and soft shadow.
 5. **Show** — `Read` both framed PNGs so they appear in the agent chat. The user
    must see them. Optionally also show `side_by_side.py --no-labels` output.
 6. **Describe** — under the images, add a succinct change description: **one
