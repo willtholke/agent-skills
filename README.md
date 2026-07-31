@@ -31,7 +31,7 @@ ln -s "$(pwd)/agent-skills/skills/"* ~/.cursor/skills/
 | --- | --- |
 | [github-pr-images](skills/github-pr-images/) | Screenshots or diagrams in GitHub PR / issue bodies |
 | [ship](skills/ship/) | Explicit `/ship`: branch → PR → green + preview → merge → prod smoke test |
-| [ui-change-before-after](skills/ui-change-before-after/) | Explicit `/ui-change-before-after`: window capture → mesh frame + highlight → chat approval |
+| [ui-change-before-after](skills/ui-change-before-after/) | Explicit `/ui-change-before-after`: capture → mesh frame → chat approval → PR side-by-side |
 
 ## What belongs here
 
