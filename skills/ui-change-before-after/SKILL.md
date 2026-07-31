@@ -21,6 +21,8 @@ approves in chat.
 - Never skip the approval question after showing both images
 - Never put a lone Before image on the PR – always side-by-side Before | After
 - Never embed raw (unframed) window shots on the PR – use gradient-framed PNGs
+- Never draw "Before" / "After" text on the gradient – table headers are enough
+- Never ship before/after framed PNGs at different pixel sizes
 - Never screenshot the whole desktop when a window capture will do
 - Never commit framed PNGs into a product repo unless the user asks
 - Never destroy or reimplement `github-pr-images` – read and follow that skill
@@ -49,22 +51,52 @@ python3 "$SKILL/scripts/capture_window.py" --list
 # capture one window (title substring)
 python3 "$SKILL/scripts/capture_window.py" --title "Harness Bay" --out /tmp/ui-before.png
 
-# frame + optional highlight (x,y,w,h in screenshot pixels)
+# pair compose (preferred): same canvas + shared letterboxed window slot
+python3 "$SKILL/scripts/compose.py" \
+  --shots /tmp/ui-before.png /tmp/ui-after.png \
+  --outdir /tmp/ui-change-before-after/slug \
+  --gradient aurora-rose \
+  --width 1920 --height 1200 \
+  --margin 0.035
+
+# single shot (same defaults: no in-image label, tight margin, soft shadow)
 python3 "$SKILL/scripts/compose.py" \
   --shot /tmp/ui-before.png \
   --out /tmp/ui-before-framed.png \
   --gradient aurora-rose \
-  --label Before \
+  --width 1920 --height 1200 \
   --highlight 120,80,480,220
 
-# optional: one wide chat/PR composite
+# optional crop when raws differ (e.g. wide desktop vs inbox column)
+python3 "$SKILL/scripts/compose.py" \
+  --shots raw-before.png raw-after.png \
+  --outdir /tmp/ui-change-before-after/slug \
+  --crops '' '0,0,648,1080'
+
+# optional: one wide chat composite (labels off by default for PR parity)
 python3 "$SKILL/scripts/side_by_side.py" \
   --before /tmp/ui-before-framed.png \
   --after /tmp/ui-after-framed.png \
-  --out /tmp/ui-before-after.png
+  --out /tmp/ui-before-after.png \
+  --no-labels
 ```
 
 Requires macOS (`screencapture`) and Pillow (`pip install pillow` if missing).
+
+### Compose defaults (do not re-break)
+
+| Knob | Default | Intent |
+| --- | --- | --- |
+| In-image label | off | Markdown `Before` / `After` table headers only |
+| `--margin` | `0.035` (~3.5%) | UI window dominates; not 8%+ with label space |
+| Shadow | large blur, low opacity, small offset | Soft lift, not a hard dark edge |
+| Canvas | gradient native, or `--width`/`--height` | Both framed outputs identical W×H |
+| Pair `--shots` | shared slot + letterbox | Same window chrome even if raw aspects differ |
+
+When raws are landscape vs portrait of the same UI, crop to a comparable region
+(inbox column, etc.) with `--crop` / `--crops`, or rely on pair letterboxing
+inside the shared slot. Verify with Pillow/`identify` that both framed PNGs
+have the same pixel size before upload.
 
 ## Output layout
 
@@ -88,11 +120,14 @@ Do this before any PR edit.
 1. **Before** — capture the target window (`capture_window.py`). Same title later.
 2. **Change** — make the UI edit (or confirm it is already made).
 3. **After** — capture again with the same `--title`.
-4. **Compose** — run `compose.py` on both shots. Same `--gradient`. Add
-   `--highlight x,y,w,h` around the changed region when useful. Labels:
-   `Before` / `After`. Both outputs must be gradient-framed.
+4. **Compose** — run `compose.py --shots … --outdir …` with the same
+   `--gradient`, `--width`/`--height`, and `--margin`. Add `--highlight` /
+   `--highlights` around the changed region when useful. **Do not** pass
+   `--label` / `--labels` for PR frames. Crop raws toward the same UI chrome
+   when aspects diverge. Both outputs must be gradient-framed at the **same
+   pixel dimensions**.
 5. **Show** — `Read` both framed PNGs so they appear in the agent chat. The user
-   must see them. Optionally also show `side_by_side.py` output.
+   must see them. Optionally also show `side_by_side.py --no-labels` output.
 6. **Hard stop** — ask:
 
    > Approve this UI change? (`yes` / describe a tweak / `no`)
@@ -116,7 +151,7 @@ Only when the user said **yes** (or clear equivalent) and wants these on a PR:
    available, else Litterbox / similar public hosts that work on private repos).
    Never private `raw.githubusercontent.com` embeds.
 2. **Edit the PR body** to include a side-by-side section. Prefer a markdown
-   table (renders on GitHub):
+   table (renders on GitHub) — labels live in the headers, not on the PNGs:
 
    ```markdown
    ## Before / After

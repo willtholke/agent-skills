@@ -90,7 +90,16 @@ def main(argv: list[str]) -> int:
     p.add_argument("--gap", type=int, default=32)
     p.add_argument("--pad", type=int, default=24)
     p.add_argument("--bg", default="18,18,22", help="R,G,B canvas behind the pair")
-    p.add_argument("--no-labels", action="store_true", help="skip Before/After captions")
+    p.add_argument(
+        "--labels",
+        action="store_true",
+        help="draw Before/After captions (off by default; prefer PR table headers)",
+    )
+    p.add_argument(
+        "--no-labels",
+        action="store_true",
+        help=argparse.SUPPRESS,
+    )
     args = p.parse_args(argv)
 
     out = side_by_side(
@@ -100,7 +109,7 @@ def main(argv: list[str]) -> int:
         gap=args.gap,
         pad=args.pad,
         bg=parse_bg(args.bg),
-        labels=not args.no_labels,
+        labels=bool(args.labels) and not args.no_labels,
     )
     print(out)
     return 0
