@@ -57,7 +57,9 @@ If on the default branch, create a focused feature branch first.
 4. Wait for GitHub checks and the preview deployment
 5. Fix valid review findings; rerun affected checks after each push
 
-For screenshots in the PR body, use the `github-pr-images` skill.
+For screenshots in the PR body, use the `github-pr-images` skill. For UI
+before/after pairs that need framed shots + chat approval, run
+`ui-change-before-after` (Phase A then B) before merge.
 
 ## 4. Verify preview
 

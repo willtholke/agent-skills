@@ -3,7 +3,8 @@ name: github-pr-images
 description: >-
   Put screenshots and diagrams into GitHub PR or issue bodies without 404s.
   Use when attaching before/after images, CleanShots, or diagrams to pull
-  requests or issues via gh CLI or agent automation.
+  requests or issues via gh CLI or agent automation. Not when the user wants
+  framed Before/After chat approval first–use ui-change-before-after.
 ---
 
 # GitHub PR images
@@ -77,6 +78,11 @@ gh pr edit <n> --body "…"
 ```
 
 One image → one markdown line. Prefer a short `## Before` / `## After` section.
+
+## Neighbor
+
+Paired Before/After with chat approval before the PR edit → use
+**ui-change-before-after** (capture, frame, approve, then come back here to upload).
 
 ## Privacy
 

@@ -14,20 +14,26 @@ npx skills add willtholke/agent-skills
 
 ### Adding skills
 
-Read `skills/<name>/SKILL.md` for instructions.
+Read [`/new-skill`](skills/new-skill/) (`skills/new-skill/SKILL.md`) and follow it.
+
+### Neighbor routing
+
+| Need | Skill |
+| --- | --- |
+| Screenshots/embeds that must not 404 | `github-pr-images` |
+| Framed Before/After + chat approval, then PR table | `ui-change-before-after` → then `github-pr-images` |
+| Full release: branch → PR → green → merge → smoke | `ship` |
 
 ### Skills
 
+| Skill | Trigger | Ambient? | Depends | Platform | Does |
+| --- | --- | --- | --- | --- | --- |
+| [new-skill](skills/new-skill/) | `/new-skill`, "scaffold a skill" | no | – | any | Scaffold/refine a portable skill in this pack |
+| [github-pr-images](skills/github-pr-images/) | "PR/issue needs screenshots" | yes | `gh`, curl host | any | Upload so embeds do not 404 |
+| [ship](skills/ship/) | `/ship`, "release" / "ship to prod" | no | `gh`, project scripts | any | Branch → PR → green + preview → merge → prod smoke |
+| [ui-change-before-after](skills/ui-change-before-after/) | `/ui-change-before-after` | no | github-pr-images, Pillow | macOS | Capture → frame → chat approve → PR Before/After |
 
-| Skill                                                    | Trigger                                 | Does                                               |
-| -------------------------------------------------------- | --------------------------------------- | -------------------------------------------------- |
-| [new-skill](skills/new-skill/)                           | `/new-skill`                            | Scaffold a portable skill in this pack             |
-| [github-pr-images](skills/github-pr-images/)             | "PR/issue needs screenshots" or similar | Upload so embeds do not 404                        |
-| [ship](skills/ship/)                                     | `/ship`                                 | Branch → PR → green + preview → merge → prod smoke |
-| [ui-change-before-after](skills/ui-change-before-after/) | `/ui-change-before-after`               | Capture → frame → chat approve → PR Before/After   |
-
-
-Read `skills/<name>/SKILL.md` before acting. That file is the source of truth
+Read `skills/<name>/SKILL.md` before acting. That file is the source of truth.
 
 ### License
 
