@@ -1,52 +1,34 @@
 # Agent Skills
 
-Agent-first engineering skills for Cursor and other agents that speak [Agent Skills](https://agentskills.io).
+Portable bundle of practical skills for Claude Code, Codex, Cursor and any agents that speak [Agent Skills](https://agentskills.io).
 
-No CLIs to install. No frameworks. Short `SKILL.md` packs that fix workflows agents keep getting wrong.
+*Note: this README.md is for agents. If you're a human, tell your agent to read it.*
 
-## Install
+## Getting started (for agents)
 
-**skills.sh (recommended)**
+### Install
 
 ```bash
 npx skills add willtholke/agent-skills
 ```
 
-**Cursor UI**
+### Adding skills
 
-1. Customize → Rules → Add Rule → Remote Rule (GitHub)
-2. Paste `https://github.com/willtholke/agent-skills`
+Read `skills/<name>/SKILL.md` for instructions.
 
-**Manual**
+### Skills
 
-```bash
-git clone https://github.com/willtholke/agent-skills.git
-mkdir -p ~/.cursor/skills
-ln -s "$(pwd)/agent-skills/skills/"* ~/.cursor/skills/
-```
 
-## Skills
+| Skill                                                    | Trigger                                 | Does                                               |
+| -------------------------------------------------------- | --------------------------------------- | -------------------------------------------------- |
+| [new-skill](skills/new-skill/)                           | `/new-skill`                            | Scaffold a portable skill in this pack             |
+| [github-pr-images](skills/github-pr-images/)             | "PR/issue needs screenshots" or similar | Upload so embeds do not 404                        |
+| [ship](skills/ship/)                                     | `/ship`                                 | Branch → PR → green + preview → merge → prod smoke |
+| [ui-change-before-after](skills/ui-change-before-after/) | `/ui-change-before-after`               | Capture → frame → chat approve → PR Before/After   |
 
-| Skill | When to use |
-| --- | --- |
-| [github-pr-images](skills/github-pr-images/) | Screenshots or diagrams in GitHub PR / issue bodies |
-| [ship](skills/ship/) | Explicit `/ship`: branch → PR → green + preview → merge → prod smoke test |
-| [ui-change-before-after](skills/ui-change-before-after/) | Explicit `/ui-change-before-after`: capture → mesh frame → chat approval → PR side-by-side |
 
-## What belongs here
+Read `skills/<name>/SKILL.md` before acting. That file is the source of truth
 
-| In | Out |
-| --- | --- |
-| Recurring agent failure modes | Framework tutorials |
-| Decision trees + stock shell / `gh` | Product-specific house rules |
-| Skills that transfer across companies | Skills that need your private infra |
-
-If you would paste it into `AGENTS.md` at three jobs, it belongs. If it is one repo's style guide, keep it local.
-
-## Contributing
-
-One skill = one folder under `skills/<name>/SKILL.md`. Keep the main file under ~100 lines. Prefer teaching agents to use existing tools over shipping new binaries.
-
-## License
+### License
 
 [MIT](LICENSE)
